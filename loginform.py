@@ -69,9 +69,9 @@ def submit_value(form):
         return []
 
 
-def fill_login_form(url, body, username, password):
+def fill_login_form(url, body, username, password, xpath):
     doc = html.document_fromstring(body, base_url=url)
-    form = _pick_form(doc.xpath('//form'))
+    form = _pick_form(doc.xpath(xpath))
     userfield, passfield = _pick_fields(form)
     form.fields[userfield] = username
     form.fields[passfield] = password
@@ -83,6 +83,7 @@ def main():
     ap = ArgumentParser()
     ap.add_argument('-u', '--username', default='username')
     ap.add_argument('-p', '--password', default='secret')
+    ap.add_argument('-x', '--xpath', default='//form')
     ap.add_argument('url')
     args = ap.parse_args()
 
@@ -92,7 +93,7 @@ def main():
         print('requests library is required to use loginform as a tool')
 
     r = requests.get(args.url)
-    values, action, method = fill_login_form(args.url, r.text, args.username, args.password)
+    values, action, method = fill_login_form(args.url, r.text, args.username, args.password, args.xpath)
     print(u'url: {0}\nmethod: {1}\npayload:'.format(action, method))
     for k, v in values:
         print(u'- {0}: {1}'.format(k, v))

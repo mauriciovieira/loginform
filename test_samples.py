@@ -50,7 +50,7 @@ def main():
     else:
         url = args[0]
         r = requests.get(url)
-        values = fill_login_form(url, r.text, "USER", "PASS")
+        values = fill_login_form(url, r.text, "USER", "PASS", "//form")
         values = (url, values)
         print(json.dumps(values, indent=3))
         if opts.write:
